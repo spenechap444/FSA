@@ -1,6 +1,6 @@
 CREATE TABLE STATEMENTS.BALANCE_SHEET (
-      SYMBOL VARCHAR(4) PRIMARY KEY,
-      FISCAL_DATE_END DATE UNIQUE,
+      SYMBOL VARCHAR(4)
+      FISCAL_DATE_END DATE,
       CURRENCY_CD VARCHAR(4),
       TOTAL_ASSETS DECIMAL(20,0),
       TOTAL_CURR_ASSETS DECIMAL(20,0),
@@ -38,4 +38,5 @@ CREATE TABLE STATEMENTS.BALANCE_SHEET (
       CREATE_TS TIMESTAMP,
       UPDATE_ID VARCHAR(10),
       UPDATE_TS TIMESTAMP
-);--OMITTED capitalLeaseObligations, otherCurrentLiabilites, otherNonCurrentLiabilities
+      PRIMARY KEY (SYMBOL, FISCAL_DATE_END)
+);--OMITTED capitalLeaseObligations, otherCurrentLiabilites, otherNonCurrentLiabilities,longTermDebt
