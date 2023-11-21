@@ -1,0 +1,13 @@
+{
+    "DB": {
+        "database": "postgres",
+        "user": "spencerchapman",
+        "password": "Icehockey4",
+        "host": "localhost",
+        "port": 5432
+    },
+    "Alpha": {
+        "key": "QW1YFKKDLNIQYOQZ",
+        "fs_url": "https://www.alphavantage.co/query?function={}&symbol={}&apikey={}"
+    }
+}
