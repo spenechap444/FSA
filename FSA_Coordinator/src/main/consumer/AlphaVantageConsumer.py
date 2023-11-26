@@ -1,75 +1,26 @@
 #This file is meant for contacting the AlphaVantage API to consume Data
 import requests
-import datetime
-import re
-
+import os
+import json
 
 class API:
-    def __init__(self, ticker, api_key, url):
-        self.__ticker = ticker
-        self.__api_key = api_key
+    def __init__(self, url):
         self.__url = url
-        self.output = None
 
-    #private method
-    def request(self, url):
-        response = requests.get(url)
-        if response.status_code == 200:
-            self.output = response.json()  # json output
-        else:
-            print('Error occurred while making the request.')
+    #public
+    def request(self, max_retries=3, timeout=10):
+        # TEST THIS
+        # resource_path = os.path.join(os.path.dirname(__file__), 'resources', 'creds.json')
+        # with open(resource_path, 'r') as f:
+        #     resources = json.load(f)
+        retries = 0
+        while retries < max_retries:
+            try:
+                response = requests.get(self.__url, timeout=timeout)
+                response.raise_for_status() # Raises an HTTPError for bad responses
+                return response.json()  # json output
+            except requests.exceptions.RequestException as req_exc:
+                print(f"Request failed: {req_exc}")
+                retries+=1
 
-    #private method
-    def parse(self):
-        # formatting the output from API to be in format for DB
-        omitted_cols = ['capitalLeaseObligations', 'longTermDebt', 'otherCurrentLiabilities', 'otherNonCurrentLiabilities']
-        ticker = self.output['symbol']
-        now = datetime.datetime.now()
-        reports = {}
-        #prepping the data for storing in the database
-        for statement in self.output['quarterlyReports']:
-            statement_values = [] #initializing empty list for fiscal period data
-            statement_values.append(ticker)
-            fiscalDateEnd = statement['fiscalDateEnding']
-            for item in statement:
-                if item not in omitted_cols:
-                    #date
-                    if re.match('[0-9]{4}\-[0-9]{2}\-[0-9]{2}', statement[item]):
-                        dt_split = statement[item].split('-')
-                        statement[item] = datetime.date(int(dt_split[0]), int(dt_split[1]), int(dt_split[2]))
-                    #number
-                    elif re.match('[0-9]', statement[item]):
-                        statement[item] = int(statement[item])
-                    #null data
-                    elif statement[item] == "None":
-                        statement[item] = None
-
-                    # adding cleaned data to a list
-                    statement_values.append(statement[item])
-
-                # Adding values to the end of the report
-            statement_values.append('AP001')  # app ID
-            statement_values.append(now)  # time stored in table
-
-            # storing list as a tuple in dictionary
-            reports[(ticker, fiscalDateEnd)] = tuple(statement_values)
-            #symbol and fiscal date end are primary keys in all 3 tables
-        self.output = reports
-
-
-    #public~ service level method
-    def api_fetch(self, statement):
-        # based on input, API request will fetch statement of choice
-        if statement == 'IS':
-            report = 'INCOME_STATEMENT'
-        elif statement == 'BS':
-            report = 'BALANCE_SHEET'
-        elif statement == 'CF':
-            report = 'CASH_FLOW'
-        else:
-            print(
-                'Invalid statement ~ Available options:\n\tIS: Income Statement\n\tBS: Balance Sheet\n\tCF: Statement of Cash Flows')
-
-        url_instance = self.__url.format(report, self.__ticker, self.__api_key)
-        self.request(url_instance)
-        self.parse()
+        print('Max retires reached. Unable to complete the request')
