@@ -33,4 +33,3 @@ class Query:
 
     def fetch_data(self, proc_name):
         pass
-
