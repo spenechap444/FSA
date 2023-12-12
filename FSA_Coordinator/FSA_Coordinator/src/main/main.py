@@ -5,7 +5,7 @@
 import FinCoordinator as fin
 
 def testing_new():
-    AMZN = fin.Statement('BS', 'AMZN')
+    AMZN = fin.Statement('CF', 'AMZN')
     data = AMZN.api_fetch()
 
 # Press the green button in the gutter to run the script.
