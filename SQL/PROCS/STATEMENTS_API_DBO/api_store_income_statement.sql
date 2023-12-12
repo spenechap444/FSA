@@ -8,9 +8,9 @@ CREATE OR REPLACE PROCEDURE statements_api_dbo.api_store_income_statement(IN P_S
                                                                         IN P_OP_INCOME_I DECIMAL(20,0),
                                                                         IN P_SELLING_ADMIN_EXP_I DECIMAL(20,0),
                                                                         IN P_RESEARCH_AND_DEV_I DECIMAL(20,0),
-                                                                        IN P_OP_EXPENCES_I DECIMAL(20,0),
+                                                                        IN P_OP_EXPENSES_I DECIMAL(20,0),
                                                                         IN P_INV_INCOME_NET_I DECIMAL(20,0),
-                                                                        IN P_NET_INTEST_INC_I DECIMAL(20,0),
+                                                                        IN P_NET_INTEREST_INC_I DECIMAL(20,0),
                                                                         IN P_INTEREST_INC_I DECIMAL(20,0),
                                                                         IN P_INTEREST_EXP_I DECIMAL(20,0),
                                                                         IN P_NON_INTEREST_INC_I DECIMAL(20,0),
@@ -29,44 +29,44 @@ CREATE OR REPLACE PROCEDURE statements_api_dbo.api_store_income_statement(IN P_S
                                                                         IN P_CREATE_TS_I TIMESTAMP)
 AS $$
 BEGIN
-  IF EXISTS (SELECT 1 FROM statements.income_statement tgt
-                      WHERE P_SYMBOL_I = tgt.symbol
-                          AND  P_FISCAL_DATE_END_I = tgt.fiscal_date_end) THEN
-    UPDATE statements.income_statement tgt
-    SET tgt.CURRENCY_CD = P_CURRENCY_CD_I,
-            tgt.GROSS_PROFIT = P_GROSS_PROFIT_I,
-            tgt.TOTAL_REVENUE = P_TOTAL_REVENUE_I,
-            tgt.COST_OF_REVENUE = P_COST_OF_REVENUE_I,
-            tgt.COGS = P_COGS_I,
-            tgt.OP_INCOME = P_OP_INCOME_I,
-            tgt.SELLING_ADMIN_EXP = P_SELLING_ADMIN_EXP_I,
-            tgt.RESEARCH_AND_DEV = P_RESEARCH_AND_DEV_I,
-            tgt.OP_EXPENCES = P_OP_EXPENCES_I,
-            tgt.INV_INCOME_NET = P_INV_INCOME_NET_I,
-            tgt.NET_INTEREST_INC = P_NET_INTEREST_INC_I,
-            tgt.INTEREST_INC = P_INETEREST_INC_I,
-            tgt.INTEREST_EXP = P_INTEREST_EXP_I,
-            tgt.NON_INTEREST_INC = P_NON_INTEREST_INC_I,
-            tgt.OTHER_NONOP_INCOME = P_OTHER_NONOP_INCOME_I,
-            tgt.DEPRECIATION = P_DEPRECIATION_I,
-            tgt.DEPR_AND_AMORT = P_DEPR_AND_AMORT_I,
-            tgt.INC_BEFORE_TAX = P_INC_BEFORE_TAX_I,
-            tgt.INC_TAX_EXP = P_INC_TAX_EXP_I,
-            tgt.INT_AND_DEBT_EXP = P_INT_AND_DEBT_EXP_I,
-            tgt.NET_INC_CONT_OP = P_NET_INC_CONT_OP_I,
-            tgt.COMP_INC_NET_TAX = P_COMP_INC_NET_TAX_I,
-            tgt.EBIT = P_EBIT_I,
-            tgt.EBITDA = P_EBITDA_I,
-            tgt.NET_INCOME = P_NET_INCOME_I,
-            tgt.UPDATE_ID = P_CREATE_ID_I,
-            tgt.UPDATE_TS = P_CREATE_TS_I
+  IF EXISTS (SELECT 1 FROM statements.income_statement
+                      WHERE P_SYMBOL_I = symbol
+                          AND  P_FISCAL_DATE_END_I = fiscal_date_end) THEN
+    UPDATE statements.income_statement
+    SET CURRENCY_CD = P_CURRENCY_CD_I,
+            GROSS_PROFIT = P_GROSS_PROFIT_I,
+            TOTAL_REVENUE = P_TOTAL_REVENUE_I,
+            COST_OF_REVENUE = P_COST_OF_REVENUE_I,
+            COGS = P_COGS_I,
+            OP_INCOME = P_OP_INCOME_I,
+            SELLING_ADMIN_EXP = P_SELLING_ADMIN_EXP_I,
+            RESEARCH_AND_DEV = P_RESEARCH_AND_DEV_I,
+            OP_EXPENSES = P_OP_EXPENSES_I,
+            INV_INCOME_NET = P_INV_INCOME_NET_I,
+            NET_INTEREST_INC = P_NET_INTEREST_INC_I,
+            INTEREST_INC = P_INTEREST_INC_I,
+            INTEREST_EXP = P_INTEREST_EXP_I,
+            NON_INTEREST_INC = P_NON_INTEREST_INC_I,
+            OTHER_NONOP_INCOME = P_OTHER_NONOP_INCOME_I,
+            DEPRECIATION = P_DEPRECIATION_I,
+            DEPR_AND_AMORT = P_DEPR_AND_AMORT_I,
+            INC_BEFORE_TAX = P_INC_BEFORE_TAX_I,
+            INC_TAX_EXP = P_INC_TAX_EXP_I,
+            INT_AND_DEBT_EXP = P_INT_AND_DEBT_EXP_I,
+            NET_INC_CONT_OP = P_NET_INC_CONT_OP_I,
+            COMP_INC_NET_TAX = P_COMP_INC_NET_TAX_I,
+            EBIT = P_EBIT_I,
+            EBITDA = P_EBITDA_I,
+            NET_INCOME = P_NET_INCOME_I,
+            UPDATE_ID = P_CREATE_ID_I,
+            UPDATE_TS = P_CREATE_TS_I
     WHERE
-          P_SYMBOL_I = tgt.symbol
-        AND  P_FISCAL_DATE_END_I = tgt.fiscal_date_end;
+          P_SYMBOL_I = symbol
+        AND  P_FISCAL_DATE_END_I = fiscal_date_end;
   ELSE
     INSERT INTO statements.income_statement(SYMBOL,
                                                                               FISCAL_DATE_END,
-                                                                              CURRENY_CD,
+                                                                              CURRENCY_CD,
                                                                               GROSS_PROFIT,
                                                                               TOTAL_REVENUE,
                                                                               COST_OF_REVENUE,
@@ -74,9 +74,9 @@ BEGIN
                                                                               OP_INCOME,
                                                                               SELLING_ADMIN_EXP,
                                                                               RESEARCH_AND_DEV,
-                                                                              OP_EXPENCES,
+                                                                              OP_EXPENSES,
                                                                               INV_INCOME_NET,
-                                                                              NET_INTEST_INC,
+                                                                              NET_INTEREST_INC,
                                                                               INTEREST_INC,
                                                                               INTEREST_EXP,
                                                                               NON_INTEREST_INC,
@@ -92,7 +92,9 @@ BEGIN
                                                                               EBITDA,
                                                                               NET_INCOME,
                                                                               CREATE_ID,
-                                                                              CREATE_TS )
+                                                                              CREATE_TS,
+                                                                              UPDATE_ID,
+                                                                              UPDATE_TS )
                                                     VALUES         (P_SYMBOL_I,
                                                                               P_FISCAL_DATE_END_I,
                                                                               P_CURRENCY_CD_I,
@@ -103,7 +105,7 @@ BEGIN
                                                                               P_OP_INCOME_I,
                                                                               P_SELLING_ADMIN_EXP_I,
                                                                               P_RESEARCH_AND_DEV_I,
-                                                                              P_OP_EXPERIENCES_I,
+                                                                              P_OP_EXPENSES_I,
                                                                               P_INV_INCOME_NET_I,
                                                                               P_NET_INTEREST_INC_I,
                                                                               P_INTEREST_INC_I,
@@ -128,6 +130,6 @@ BEGIN
 
     EXCEPTION
         WHEN OTHERS THEN
-            RAISE NOTICE 'Error in procedure STATEMENTS_API_DBO.api_store_income_statement (%)',SQLERRM;
+            RAISE EXCEPTION 'Error in procedure STATEMENTS_API_DBO.api_store_income_statement (%)',SQLERRM;
 END;
 $$ LANGUAGE plpgsql;

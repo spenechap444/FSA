@@ -5,11 +5,13 @@
     "fetch" : ""
   },
   "IS" : {
-    "store" : "",
+    "omitted": "",
+    "store" : "CALL statements_api_dbo.api_store_income_statement(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
     "fetch" : ""
   },
   "CF" : {
-    "store" : "",
+    "omitted": "",
+    "store" : "CALL statements_api_dbo.api_store_cash_flows(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
     "fetch" : ""
   }
 }
