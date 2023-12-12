@@ -1,0 +1,15 @@
+{
+  "BS" : {
+    "omitted" : "capitalLeaseObligations,longTermDebt,otherCurrentLiabilities,otherNonCurrentLiabilities",
+    "store" : "CALL statements_api_dbo.api_store_balance_sheet(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
+    "fetch" : ""
+  },
+  "IS" : {
+    "store" : "",
+    "fetch" : ""
+  },
+  "CF" : {
+    "store" : "",
+    "fetch" : ""
+  }
+}

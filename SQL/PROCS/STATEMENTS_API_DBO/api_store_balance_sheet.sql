@@ -37,52 +37,56 @@ CREATE OR REPLACE PROCEDURE statements_api_dbo.api_store_balance_sheet( IN P_SYM
                                                                         IN P_CREATE_TS_I TIMESTAMP)
 LANGUAGE plpgsql
 AS $$
+DECLARE
+  v_exists BOOLEAN;
 BEGIN
-IF EXISTS (SELECT 1 FROM statements.balance_sheet tgt
-                    WHERE P_SYMBOL_I = tgt.symbol
-                        AND P_FISCAL_DATE_END_I = tgt.fiscal_date_end) THEN
-  --existing record
-  UPDATE statements.balance_sheet tgt
+SELECT TRUE INTO v_exists 
+FROM statements.balance_sheet tgt
+WHERE tgt.SYMBOL = P_SYMBOL_I
+AND tgt.FISCAL_DATE_END = P_FISCAL_DATE_END_I;
+
+IF v_exists THEN
+  UPDATE statements.balance_sheet
   SET
-        tgt.CURRENCY_CD = P_CURRENCY_CD_I,
-        tgt.TOTAL_ASSETS = P_TOTAL_ASSETS_I,
-        tgt.TOTAL_CURR_ASSETS = P_TOTAL_CURR_ASSETS_I,
-        tgt.CASH_AND_EQUIV = P_CASH_AND_EQUIV_I,
-        tgt.CASH_AND_SHORT_INV = P_CASH_AND_SHORT_INV_I,
-        tgt.INVENTORY = P_INVENTORY_I,
-        tgt.CURRENT_NET_REC = P_CURRENT_NET_REC_I,
-        tgt.TOT_NON_CURR_ASSETS = P_TOT_NON_CURR_ASSETS_I,
-        tgt.PROPERTY_PLANT_EQUIP = P_PROPERTY_PLANT_EQUIP_I,
-        tgt.ACCUM_DEPR = P_ACCUM_DEPR_I,
-        tgt.INTANG_ASSETS = P_INTANG_ASSETS_I,
-        tgt.INTANG_ASSETS_NO_GW = P_INTANG_ASSETS_NO_GW_I,
-        tgt.GOODWILL = P_GOODWILL_I,
-        tgt.INVESTMENTS = P_INVESTMENTS_I,
-        tgt.LT_INVESTMENTS = P_LT_INVESTMENTS_I,
-        tgt.ST_INVESTMENTS = P_ST_INVESTMENTS_I,
-        tgt.OTHER_CURR_ASSETS = P_OTHER_CURR_ASSETS_I,
-        tgt.OTHER_NONCURR_ASSETS = P_OTHER_NONCURR_ASSETS_I,
-        tgt.TOTAL_LIAB = P_TOTAL_LIAB_I,
-        tgt.TOTAL_CURR_LIAB = P_TOTAL_CURR_LIAB_I,
-        tgt.CURR_AP = P_CURR_AP_I,
-        tgt.DEFF_REVENUE = P_DEFF_REVENUE_I,
-        tgt.CURR_DEBT = P_CURR_DEBT_I,
-        tgt.ST_DEBT = P_ST_DEBT_I,
-        tgt.TOT_NONCURR_LIAB = P_TOT_NONCURR_LIAB_I,
-        tgt.CURR_LT_DEBT = P_CURR_LT_DEBT_I,
-        tgt.NONCURR_LT_DEBT = P_NONCURR_LT_DEBT_I,
-        tgt.SHORT_LT_DEBT_TOTAL = P_SHORT_LT_DEBT_TOTAL_I,
-        tgt.TOT_SHAREHOLD_EQ = P_TOT_SHAREHOLD_EQ_I,
-        tgt.TREASURY_STOCK = P_TREASURY_STOCK_I,
-        tgt.RET_EARNINGS = P_RET_EARNINGS_I,
-        tgt.COMMON_STOCK = P_COMMON_STOCK_I,
-        tgt.COMMON_STOCK_OUT = P_COMMON_STOCK_OUT_I,
-        tgt.UPDATE_ID = P_CREATE_ID_I,
-        tgt.UPDATE_TS = P_CREATE_TS_I
-WHERE
-              P_SYMBOL_I = tgt.symbol
-    AND P_FISCAL_DATE_END_I = tgt.fiscal_date_end;
-ELSE --Record does not exist
+        CURRENCY_CD = P_CURRENCY_CD_I,
+        TOTAL_ASSETS = P_TOTAL_ASSETS_I,
+        TOTAL_CURR_ASSETS = P_TOTAL_CURR_ASSETS_I,
+        CASH_AND_EQUIV = P_CASH_AND_EQUIV_I,
+        CASH_AND_SHORT_INV = P_CASH_AND_SHORT_INV_I,
+        INVENTORY = P_INVENTORY_I,
+        CURRENT_NET_REC = P_CURRENT_NET_REC_I,
+        TOT_NON_CURR_ASSETS = P_TOT_NON_CURR_ASSETS_I,
+        PROPERTY_PLANT_EQUIP = P_PROPERTY_PLANT_EQUIP_I,
+        ACCUM_DEPR = P_ACCUM_DEPR_I,
+        INTANG_ASSETS = P_INTANG_ASSETS_I,
+        INTANG_ASSETS_NO_GW = P_INTANG_ASSETS_NO_GW_I,
+        GOODWILL = P_GOODWILL_I,
+        INVESTMENTS = P_INVESTMENTS_I,
+        LT_INVESTMENTS = P_LT_INVESTMENTS_I,
+        ST_INVESTMENTS = P_ST_INVESTMENTS_I,
+        OTHER_CURR_ASSETS = P_OTHER_CURR_ASSETS_I,
+        OTHER_NONCURR_ASSETS = P_OTHER_NONCURR_ASSETS_I,
+        TOTAL_LIAB = P_TOTAL_LIAB_I,
+        TOTAL_CURR_LIAB = P_TOTAL_CURR_LIAB_I,
+        CURR_AP = P_CURR_AP_I,
+        DEFF_REVENUE = P_DEFF_REVENUE_I,
+        CURR_DEBT = P_CURR_DEBT_I,
+        ST_DEBT = P_ST_DEBT_I,
+        TOT_NONCURR_LIAB = P_TOT_NONCURR_LIAB_I,
+        CURR_LT_DEBT = P_CURR_LT_DEBT_I,
+        NONCURR_LT_DEBT = P_NONCURR_LT_DEBT_I,
+        SHORT_LT_DEBT_TOTAL = P_SHORT_LT_DEBT_TOTAL_I,
+        TOT_SHAREHOLD_EQ = P_TOT_SHAREHOLD_EQ_I,
+        TREASURY_STOCK = P_TREASURY_STOCK_I,
+        RET_EARNINGS = P_RET_EARNINGS_I,
+        COMMON_STOCK = P_COMMON_STOCK_I,
+        COMMON_STOCK_OUT = P_COMMON_STOCK_OUT_I,
+        UPDATE_ID = P_CREATE_ID_I,
+        UPDATE_TS = P_CREATE_TS_I
+  WHERE
+              SYMBOL = P_SYMBOL_I
+    AND FISCAL_DATE_END = P_FISCAL_DATE_END_I;
+ELSE
    INSERT INTO statements.balance_sheet(SYMBOL,
                                                                     FISCAL_DATE_END,
                                                                     CURRENCY_CD,
@@ -163,6 +167,6 @@ ELSE --Record does not exist
 END IF;
 EXCEPTION
     WHEN OTHERS THEN
-        RAISE NOTICE 'Error in procedure STATEMENTS_API_DBO.api_store_balance_sheet (%)',SQLERRM;
+        RAISE EXCEPTION 'Error in procedure STATEMENTS_API_DBO.api_store_balance_sheet (%)',SQLERRM;
 END;
 $$;
