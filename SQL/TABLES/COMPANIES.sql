@@ -1,0 +1,17 @@
+CREATE TABLE STATEMENTS.COMPANIES(SYMBOL VARCHAR(10),
+                                  ASSET_TYPE VARCHAR(100),
+                                  COMPANY_DESC VARCHAR(2000),
+                                  CIK VARCHAR(20),
+                                  EXCHANGE VARCHAR(20),
+                                  CURRENCY VARCHAR(10),
+                                  COUNTRY VARCHAR(20),
+                                  SECTOR VARCHAR(100),
+                                  INDUSTRY VARCHAR(100),
+                                  COMPANY_ADDRESS VARCHAR(200),
+                                  LATEST_QUARTER DATE,
+                                  CREATE_ID VARCHAR(10),
+                                  CREATE_TS TIMESTAMP,
+                                  UPDATE_ID VARCHAR(10),
+                                  UPDATE_TS TIMESTAMP,
+                                  PRIMARY KEY (SYMBOL)
+);
