@@ -2,16 +2,21 @@
   "BS" : {
     "omitted" : "capitalLeaseObligations,longTermDebt,otherCurrentLiabilities,otherNonCurrentLiabilities",
     "store" : "CALL statements_api_dbo.api_store_balance_sheet(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
-    "fetch" : ""
+    "fetch" : "SELECT * FROM statements_api_dbo.api_fetch_balance_sheet(%s, %s);"
   },
   "IS" : {
     "omitted": "",
     "store" : "CALL statements_api_dbo.api_store_income_statement(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
-    "fetch" : ""
+    "fetch" : "SELECT * FROM statements_api_dbo.api_fetch_income_statement(%s,%s);"
   },
   "CF" : {
     "omitted": "",
     "store" : "CALL statements_api_dbo.api_store_cash_flows(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
-    "fetch" : ""
+    "fetch" : "SELECT * FROM statements_api_dbo.api_fetch_cash_flows(%s,%s);"
+  },
+  "Company" : {
+    "omitted": "CIK,FiscalYearEnd,MarketCapitalization,EBITDA,PERatio,PEGRatio,BookValue,DividendPerShare,DividendYield,EPS,RevenuePerShareTTM,ProfitMargin,OperatingMarginTTM,ReturnOnAssetsTTM,ReturnOnEquityTTM,RevenueTTM,GrossProfitTTM,DilutedEPSTTM,QuarterlyEarningsGrowthYOY,QuarterlyRevenueGrowthYOY,AnalystTargetPrice,TrailingPE,ForwardPE,PriceToSalesRatioTTM,PriceToBookRatio,EVToRevenue,EVToEBITDA,Beta,52WeekHigh,52WeekLow,50DayMovingAverage,200DayMovingAverage,SharesOutstanding,DividendDate,ExDividendDate",
+    "store": "CALL statements_api_dbo.api_store_companies(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",
+    "fetch": "SELECT * FROM statements_api_dbo.api_fetch_companies(%s);"
   }
 }

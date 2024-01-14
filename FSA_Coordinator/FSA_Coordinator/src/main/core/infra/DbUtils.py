@@ -12,15 +12,11 @@ class DB_cnn:
         conn = psycopg2.connect(**self.__cnn)
         return conn  # conn obj allows you to execute SQL commands & procedures
 
-    def store_data(self, records): #records to store as input, and omitted columns from API request
+    def store(self, query, record): #records to store as input, and omitted columns from API request
         try:
-            query_path = os.path.join(os.path.dirname(__file__), 'resources','queries.json')
-            with open(query_path, 'r') as f:
-                queries = json.load(f)
-
             conn = self.open_cnn()
             cursor = conn.cursor()
-            cursor.execute(queries['BS']['store'], records) #calling stored proceudre with tuple of records
+            cursor.execute(query, record) #calling stored proceudre with tuple of records
             cursor.execute('COMMIT;')
             conn.close()
         except psycopg2.DatabaseError as e:
@@ -30,13 +26,27 @@ class DB_cnn:
             if conn:
                 conn.close()
 
-class Query:
-    def __init__(self, conn):
-        self.conn = conn
+    def fetch(self, query):
+        attempts = 1
+        max_retries = 5
+        conn = self.open_cnn()
+        while attempts <= max_retries:
+            try:
+                cursor=conn.cursor
+                cursor.execute(query)
+                return cursor.fetchall()
+            except Exception as e:
+                print(f'DB Error raised: {e}')
+                attempts+=1
+            finally:
+                conn.close()
+                print(f'DB connection closed after {attempts}')
 
-    def store_data(self, proc_name):
-        cursor = self.conn.cusor()
-        pass
+    def fetch_fs_cursor(self):
+        query_path = os.path.join(os.path.dirname(__file__),'resources', 'queries.json')
+        with open(query_path, 'r') as f:
+            queries = json.load(f)
 
-    def fetch_data(self, proc_name):
-        pass
+        conn = self.open_cnn()
+        cursor = conn.cursor
+        cursor.execute(queries[''])
