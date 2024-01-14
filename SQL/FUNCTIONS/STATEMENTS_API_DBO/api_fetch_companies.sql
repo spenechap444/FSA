@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION statements_api_dbo.api_fetch_companies( IN P_SYMBOL_I VARCHAR(10))
 RETURNS TABLE ( P_SYMBOL_O VARCHAR(10),
                 P_ASSET_TYPE_O VARCHAR(100),
+                P_COMPANY_NAME_O VARCHAR(100),
                 P_COMPANY_DESC_O VARCHAR(2000),
                 P_EXCHANGE_O VARCHAR(20),
                 P_CURRENCY_O VARCHAR(10),
@@ -18,6 +19,7 @@ AS $$
 BEGIN
     RETURN QUERY SELECT SYMBOL,
                         ASSET_TYPE,
+                        COMPANY_NAME,
                         COMPANY_DESC,
                         EXCHANGE,
                         CURRENCY,

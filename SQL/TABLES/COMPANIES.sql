@@ -1,5 +1,6 @@
 CREATE TABLE STATEMENTS.COMPANIES(SYMBOL VARCHAR(10),
                                   ASSET_TYPE VARCHAR(100),
+                                  COMPANY_NAME VARCHAR(100),
                                   COMPANY_DESC VARCHAR(2000),
                                   EXCHANGE VARCHAR(20),
                                   CURRENCY VARCHAR(10),

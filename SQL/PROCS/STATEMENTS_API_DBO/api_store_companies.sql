@@ -1,5 +1,6 @@
 CREATE OR REPLACE PROCEDURE statements_api_dbo.api_store_companies(IN P_SYMBOL_I VARCHAR(10),
                                                                    IN P_ASSET_TYPE_I VARCHAR(100),
+                                                                   IN P_COMPANY_NAME_I VARCHAR(100),
                                                                    IN P_COMPANY_DESC_I VARCHAR(2000),
                                                                    IN P_EXCHANGE_I VARCHAR(20),
                                                                    IN P_CURRENCY_I VARCHAR(10),
@@ -16,6 +17,7 @@ BEGIN
                 WHERE symbol = P_SYMBOL_I) THEN
         UPDATE STATEMENTS.COMPANIES SET
                 ASSET_TYPE = P_ASSET_TYPE_I,
+                COMPANY_NAME = P_COMPANY_NAME_I,
                 COMPANY_DESC = P_COMPANY_DESC_I,
                 EXCHANGE = P_EXCHANGE_I,
                 CURRENCY = P_CURRENCY_I,
@@ -30,6 +32,7 @@ BEGIN
     ELSE
         INSERT INTO STATEMENTS.COMPANIES(SYMBOL,
                                         ASSET_TYPE,
+                                        COMPANY_NAME,
                                         COMPANY_DESC,
                                         EXCHANGE,
                                         CURRENCY,
@@ -44,6 +47,7 @@ BEGIN
                                         UPDATE_TS)
                             VALUES (P_SYMBOL_I,
                                         P_ASSET_TYPE_I,
+                                        P_COMPANY_NAME_I,
                                         P_COMPANY_DESC_I,
                                         P_EXCHANGE_I,
                                         P_CURRENCY_I,
