@@ -1,46 +1,69 @@
 import psycopg2
 import json
 import os
+from functools import wraps
+import time
+
 import re
+
+def DB_retry(max_retries=5, delay=1):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            attempts = 1
+            while attempts <= max_retries:
+                try:
+                    return func(*args, **kwargs)
+                except psycopg2.DatabaseError as e:
+                    print(f"Database error: {str(e)}, retry number {attempts}")
+                    time.sleep(delay)
+                    attempts+=1
+                except Exception as e:
+                    print(f"Error encountered: {str(e)}, retry number {attempts}")
+                    time.sleep(delay)
+                    attempts+=1
+            raise Exception(f"Failes after {max_retries} retries")
+        return wrapper
+    return decorator
+
 
 #establishing a database connection
 class DB_cnn:
     def __init__(self, cnn):
         self.__cnn = cnn  # json obj w/ connection details
+        self.max_retries = 5
+        self.delay = 1
 
+    @DB_retry()
     def open_cnn(self):  # opens the db connection with json object
-        conn = psycopg2.connect(**self.__cnn)
-        return conn  # conn obj allows you to execute SQL commands & procedures
+        return psycopg2.connect(**self.__cnn) # returns conn obj~ allows you to execute SQL commands & procedures
 
-    def store(self, query, record): #records to store as input, and omitted columns from API request
+    #store should be passed as dictionary, will log key and store value
+    #value will be a tuple datatype
+    @DB_retry()
+    def store(self, query, records): #list of tuple of records to store as input, and omitted columns from API request
+        conn = self.open_cnn()
         try:
-            conn = self.open_cnn()
             cursor = conn.cursor()
-            cursor.execute(query, record) #calling stored proceudre with tuple of records
+            for item in records: #can add a multithreaded approach to this
+                cursor.execute(query, records[item])
+                print(item)
             cursor.execute('COMMIT;')
-            conn.close()
-        except psycopg2.DatabaseError as e:
-            error_message = str(e)
-            print(f"Database error: {error_message}")
         finally:
             if conn:
                 conn.close()
+                print('Connection closed')
 
+    @DB_retry()
     def fetch(self, query):
-        attempts = 1
-        max_retries = 5
         conn = self.open_cnn()
-        while attempts <= max_retries:
-            try:
-                cursor=conn.cursor
-                cursor.execute(query)
-                return cursor.fetchall()
-            except Exception as e:
-                print(f'DB Error raised: {e}')
-                attempts+=1
-            finally:
+        try:
+            cursor=conn.cursor
+            cursor.execute(query)
+            return cursor.fetchall()
+        finally:
+            if conn:
                 conn.close()
-                print(f'DB connection closed after {attempts}')
 
     def fetch_fs_cursor(self):
         query_path = os.path.join(os.path.dirname(__file__),'resources', 'queries.json')

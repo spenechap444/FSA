@@ -8,6 +8,7 @@ import re
 #    inheritable methods ~
 #       store, fetch, api_fetch
 #
+###########################################################
 
 class Company: #company can be the base class for statements, ratios and prices in which they can inherit from this company class
     def __init__(self, ticker):
@@ -28,20 +29,18 @@ class Company: #company can be the base class for statements, ratios and prices 
         #fetch the data
         API = av.API(url)
         data = API.request()
-        print(data)
         record = self.parse(data)
         self.store_company(record)
         # return data
 
     def parse(self, data): #parse method should be at the API class level!
         omitted_cols = self.queries['Company']['omitted'].split(',')
-        # print(omitted_cols)
         now = datetime.datetime.now()
+        records = {}
         record = []
         for item in data:
             if item not in omitted_cols:
                 if item not in omitted_cols:  # omitted cols represent values not being stored in DB
-                    print(item)
                     # date
                     if re.match('[0-9]{4}\-[0-9]{2}\-[0-9]{2}', data[item]):
                         dt_split = data[item].split('-')
@@ -57,13 +56,10 @@ class Company: #company can be the base class for statements, ratios and prices 
 
         record.append('AP001')  # app ID
         record.append(now)  # time stored in table
+        records[self.ticker] = tuple(record)
 
-        return tuple(record)
+        return records
 
-    def store_company(self, record):
+    def store_company(self, records):
         DB = db.DB_cnn(self.creds['DB'])
-        DB.store(self.queries['Company']['store'], record)
-        print('Record stored successfully')
-        #need to still build out the DB components
-        #call the api only if the record is not present in the DB
-            #fetch -> if 0 records then call api and store in DB
+        DB.store(self.queries['Company']['store'], records)

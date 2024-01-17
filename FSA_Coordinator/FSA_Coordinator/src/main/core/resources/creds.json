@@ -1,4 +1,11 @@
 {
+    "DB_TEST": {
+        "database": "postgres",
+        "user": "spencerchapman",
+        "password": "Icehockey4",
+        "host": "localhost",
+        "port": 5431
+    },
     "DB": {
         "database": "postgres",
         "user": "spencerchapman",
