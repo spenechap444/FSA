@@ -6,3 +6,6 @@ class Prices:
         self.ticker = ticker
         self.creds = tool.get_resources('creds')
         self.queries = tool.get_resources('queries')
+
+
+#api URL

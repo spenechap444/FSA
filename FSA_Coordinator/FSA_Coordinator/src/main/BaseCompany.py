@@ -1,6 +1,6 @@
 from core.infra import DbUtils as db
 from src.main.core.infra.utils import tools as tool
-from consumer import AlphaVantageConsumer as av
+from src.main.core.infra import AlphaVantageConsumer as av
 import datetime
 import re
 ###########################################################
@@ -11,32 +11,33 @@ import re
 ###########################################################
 
 class Company: #company can be the base class for statements, ratios and prices in which they can inherit from this company class
-    def __init__(self, ticker):
+    def __init__(self, ticker, type, api_class):
         self.ticker = ticker
+        self.type = type # Company, BS, IS, CF, Price
+        self.api_class = api_class #'OVERVIEW', 'INCOME_STATEMENT', 'BALANCE_SHEET', 'CASH_FLOW'
         self.creds = tool.get_resources('creds')
         self.queries = tool.get_resources('queries')
 
-    def fetch_company(self): #need to still build DB components
+    def fetch(self, cls): #generic
         #fetch company information from the company
         DB = db.DB_cnn(self.creds['DB'])
-        DB.fetch(self.queries['Company'])
+        DB.fetch(self.queries[self.type]['fetch'])
 
     def api_fetch(self):
         key = self.creds['Alpha']['key']
         url = self.creds['Alpha']['fs_url']
-        type = 'OVERVIEW'
-        url = url.format(type, self.ticker, key)
+        url = url.format(self.api_class, self.ticker, key) #formatting the url for raising request
         #fetch the data
         API = av.API(url)
-        data = API.request()
-        record = self.parse(data)
+        data = API.request() #returning data from API request
+        record = self.parse(data) #move to the API level
         self.store_company(record)
-        # return data
 
     def parse(self, data): #parse method should be at the API class level!
-        omitted_cols = self.queries['Company']['omitted'].split(',')
+        omitted_cols = self.queries[self.type]['omitted'].split(',')
         now = datetime.datetime.now()
         records = {}
+
         record = []
         for item in data:
             if item not in omitted_cols:
@@ -62,4 +63,4 @@ class Company: #company can be the base class for statements, ratios and prices 
 
     def store_company(self, records):
         DB = db.DB_cnn(self.creds['DB'])
-        DB.store(self.queries['Company']['store'], records)
+        DB.store(self.queries[self.type]['store'], records)

@@ -2,7 +2,8 @@ import re
 import datetime
 from core.infra import DbUtils as db
 from src.main.core.infra.utils import tools as tool
-from consumer import AlphaVantageConsumer as av
+from src.main.core.infra import AlphaVantageConsumer as av
+
 
 #################################################################################################################################
 #  Statement class serves purpose for storing financial statement data in order to make data available for other modules to use

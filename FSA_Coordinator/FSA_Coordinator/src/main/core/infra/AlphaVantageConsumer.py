@@ -9,10 +9,6 @@ class API:
 
     #public
     def request(self, max_retries=3, timeout=10):
-        # TEST THIS
-        # resource_path = os.path.join(os.path.dirname(__file__), 'resources', 'creds.json')
-        # with open(resource_path, 'r') as f:
-        #     resources = json.load(f)
         retries = 0
         while retries < max_retries:
             try:
@@ -24,3 +20,4 @@ class API:
                 retries+=1
 
         print('Max retires reached. Unable to complete the request')
+

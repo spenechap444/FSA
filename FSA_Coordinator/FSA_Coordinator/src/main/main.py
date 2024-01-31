@@ -3,12 +3,13 @@
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 import StatementCoordinator as fin
-import CompanyCoordinator as com
+import BaseCompany as com
 import RatioCoordinator as rat
 import UI as ui
 #db testing dependencies
 import src.main.core.infra.DbUtils as db
 import src.main.core.infra.utils.tools as tl
+import os
 
 def testing_ratios():
     ratio = rat.Ratio('TSLA')
@@ -41,7 +42,9 @@ if __name__ == '__main__':
     # testing_fetch()
     # testing_company()
     # testing_store()
-    testing_db()
+    # testing_db()
+    print(os.path.dirname(__file__))
+
 
 # See PyCharm help at
 # https://www.jetbrains.com/help/pycharm/
