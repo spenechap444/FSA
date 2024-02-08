@@ -108,6 +108,58 @@
     },
     "omitted": {}
   },
+  "OVERVIEW": {
+    "stored": {
+      "Symbol": "string",
+      "AssetType": "string",
+      "Name": "string",
+      "Description": "string",
+      "Exchange": "string",
+      "Currency": "string",
+      "Country": "string",
+      "Sector": "string",
+      "Industry": "string",
+      "Address": "string",
+      "LatestQuarter": "string"
+    },
+    "omitted": {
+      "CIK": "int",
+      "FiscalYearEnd": "string",
+      "MarketCapitalization": "int",
+      "EBITDA": "int",
+      "PERatio": "float",
+      "PEGRatio": "float",
+      "BookValue": "float",
+      "DividendPerShare": "float",
+      "DividendYield": "float",
+      "EPS": "float",
+      "RevenuePerShareTTM": "float",
+      "ProfitMargin": "float",
+      "OperatingMarginTTM": "float",
+      "ReturnOnAssetsTTM": "float",
+      "ReturnOnEquityTTM": "float",
+      "RevenueTTM": "int",
+      "GrossProfitTTM": "int",
+      "DilutedEPSTTM": "float",
+      "QuarterlyEarningsGrowthYOY": "float",
+      "QuarterlyRevenueGrowthYOY": "float",
+      "AnalystTargetPrice": "float",
+      "TrailingPE": "float",
+      "ForwardPE": "float",
+      "PriceToSalesRatioTTM": "float",
+      "PriceToBookRatio": "float",
+      "EVToRevenue": "float",
+      "EVToEBITDA": "float",
+      "Beta": "float",
+      "52WeekHigh": "float",
+      "52WeekLow": "float",
+      "50DayMovingAverage": "float",
+      "200DayMovingAverage": "float",
+      "SharesOutStanding": "int",
+      "DividendDate": "date",
+      "ExDividendDate": "date"
+    }
+  },
   "TIME_SERIES_DAILY": {
     "stored": {
       "Symbol": "string",
@@ -129,6 +181,7 @@
       "low": "float",
       "close": "float",
       "volume": "int"
-    }
+    },
+    "omitted": {}
   }
 }

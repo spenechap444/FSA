@@ -3,13 +3,41 @@ from src.main.core.infra.utils import tools as tool
 from src.main.core.infra import AlphaVantageConsumer as av
 import datetime
 import re
-###########################################################
-#  Company class
-#    inheritable methods ~
-#       store, fetch, api_fetch
-#
-###########################################################
 
+
+class Company_v1:
+    def __init__(self, ticker):
+        self.ticker = ticker
+        self.creds = tool.get_resources('creds')
+        self.queries = tool.get_resources('queries')
+
+    def store(self, type): #utilizing API_v1 class, getting rid of api_fetch method
+        #type 'OVERVIEW', 'INCOME_STATEMENT', 'BALANCE_SHEET', 'CASH_FLOW'
+        API = av.API_v1(self.ticker)
+        #data type mapping handled from API method
+        if type == 'TIME_SERIES_INTRADAY':
+            pass
+        else:
+            data = API.request_company(type)
+
+        DB = db.DB_cnn(self.creds['DB'])
+        DB.store(self.queries[type]['store'], data)
+
+    def fetch_company(self): #in future, will need to be able to fetch by industry/sector
+        DB = db.DB_cnn(self.creds['DB'])
+        return DB.fetch(self.queries['OVERVIEW']['fetch'], (self.ticker,))
+
+    def fetch_statement(self, type, fiscalDateEnd):
+        DB = db.DB_cnn(self.creds['DB'])
+        if fiscalDateEnd is not None:
+            dt_split = fiscalDateEnd.split('-')
+            date_param = datetime.date(int(dt_split[0]), int(dt_split[1]), int(dt_split[2]))
+        else:
+            date_param = None
+        params = (self.ticker, date_param)
+        return DB.fetch(self.queries[type]['fetch'], params)
+
+#old implementation
 class Company: #company can be the base class for statements, ratios and prices in which they can inherit from this company class
     def __init__(self, ticker, type, api_class):
         self.ticker = ticker

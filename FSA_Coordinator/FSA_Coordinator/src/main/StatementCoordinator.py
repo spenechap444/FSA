@@ -68,6 +68,8 @@ class Statement: #statement should be initialized with the output from API reque
             report = 'BALANCE_SHEET'
         elif self.type == 'CF':
             report = 'CASH_FLOW'
+        else:
+            report = self.type
         key = creds['Alpha']['key']
         url = creds['Alpha']['fs_url']
         url = url.format(report, self.ticker, key)

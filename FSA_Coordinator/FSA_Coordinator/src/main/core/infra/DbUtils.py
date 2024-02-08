@@ -1,10 +1,6 @@
 import psycopg2
-import json
-import os
 from functools import wraps
 import time
-
-import re
 
 def DB_retry(max_retries=5, delay=1):
     def decorator(func):
@@ -22,7 +18,7 @@ def DB_retry(max_retries=5, delay=1):
                     print(f"Error encountered: {str(e)}, retry number {attempts}")
                     time.sleep(delay)
                     attempts+=1
-            raise Exception(f"Failes after {max_retries} retries")
+            raise Exception(f"Failed after {max_retries} retries")
         return wrapper
     return decorator
 
@@ -55,21 +51,16 @@ class DB_cnn:
                 print('Connection closed')
 
     @DB_retry()
-    def fetch(self, query):
+    def fetch(self, query, params=()):
         conn = self.open_cnn()
         try:
-            cursor=conn.cursor
-            cursor.execute(query)
+            cursor=conn.cursor()
+            if len(params)==0:
+                cursor.execute(query)
+            else:
+                print('Executing...')
+                cursor.execute(query, params)
             return cursor.fetchall()
         finally:
             if conn:
                 conn.close()
-
-    def fetch_fs_cursor(self):
-        query_path = os.path.join(os.path.dirname(__file__),'resources', 'queries.json')
-        with open(query_path, 'r') as f:
-            queries = json.load(f)
-
-        conn = self.open_cnn()
-        cursor = conn.cursor
-        cursor.execute(queries[''])
