@@ -16,6 +16,7 @@
     "Alpha": {
         "key": "QW1YFKKDLNIQYOQZ",
         "fs_url": "https://www.alphavantage.co/query?function={}&symbol={}&apikey={}",
-        "prices_url": "https://www.alphavantage.co/query?function={}&symbol={}&interval={}&month={}&outputsize=full&apikey={}"
+        "prices_url": "https://www.alphavantage.co/query?function={}&symbol={}&interval={}&month={}&outputsize=full&apikey={}",
+        "bulk_prices_url": "https://www.alphavantage.co/query?function={}&symbol={}&interval={}&outputsize=full&apikey={}"
     }
 }

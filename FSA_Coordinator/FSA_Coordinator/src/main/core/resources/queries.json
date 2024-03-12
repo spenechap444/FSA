@@ -22,5 +22,14 @@
   "RATIOS" : {
     "store": "CALL statements_api_dbo.api_store_ratios(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
     "fetch": ""
+  },
+  "PRICE_LOAD_LOOKUP" : {
+    "store": "CALL intraday_api_dbo.api_store_price_load_config(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+    "fetch": "SELECT * FROM intraday_api_dbo.api_fetch_price_load_lookup(%s);"
+  },
+  "TIME_SERIES_INTRADAY" : {
+    "store": "CALL intraday_api_dbo.api_store_stock_prices(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+    "fetch": "SELECT * FROM intraday_api_dbo.api_fetch_stock_prices(%s,%s,%s)",
+    "util": "SELECT intraday.func_create_part(%s,%s,%s);"
   }
 }

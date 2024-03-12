@@ -2,6 +2,7 @@
 import requests
 import os
 import json
+import ijson
 import src.main.core.infra.utils.tools as tool
 import datetime
 
@@ -32,31 +33,37 @@ class API_v1:
                 retries+=1
         print('Max retries reached for company requests.  Unable to complete the request')
 
-    def request_prices(self, type, interval, month,max_retries=3,timeout=10):
+    def request_prices(self, type, interval, refresh_ts,max_retries=3,timeout=10):
         retries = 0
         key = self.creds['Alpha']['key']
-        url = self.creds['Alpha']['prices_url']
-        url = url.format(type, self.ticker, interval, month, key)
+        if refresh_ts == None:
+            url = self.creds['Alpha']['bulk_prices_url']
+            url = url.format(type, self.ticker, interval, key) #month not passed when all pricing history required
+        else:
+            month_lst = str(refresh_ts).split(' ')[0].split('-')[:2]
+            month = f"{month_lst[0]}-{month_lst[1]}" #formatting for API request
+            url = self.creds['Alpha']['prices_url']
+            url = url.format(type, self.ticker, interval, month, key) #month passed when historical pricing data in DB
         while retries < max_retries:
             try:
                 response=requests.get(url,timeout=timeout)
                 response.raise_for_status() #Raises an HTTP Error for bad responses
-                return self.parse_prices(response.json(), type)
+                stream = ijson.basic_parse(response.content)
+
             except requests.exceptions.RequestException as req_exc:
                 print(f"Request failed: {req_exc}")
                 retries+=1
             except Exception as e:
                 print(f"Error encountered: {e}")
                 retries+=1
-        print('Max retries reached for price requests.  Unable to complete the request')
 
+        return stream
 
     def parse_company(self, response, type):
         dtype_file = tool.get_resources('dtype_map')
         dtypes = dtype_file[type]['stored']
         omitted = dtype_file[type]['omitted']
         fields = []
-
         for item in response:
             if item in dtypes:
                 itemDataType = dtypes[item]
@@ -109,8 +116,55 @@ class API_v1:
 
         return records_formatted #{[fiscalDateEnding]: tuple of records}
 
-    def parse_prices(self, response,type):
+    def parse_prices(self, response,type,interval):
+        dtype_file = tool.get_resources('dtype_map')
+        dtypes = dtype_file[type]['stored']
+        # omitted = dtype_file[type]['omitted']
+        records_formatted = {} #initializing dictionary for output
+        prices = response[f'Time Series ({interval})']
+        latest_window = response['Meta Data']['3. Last Refreshed']
+        #need to filter the json response to filter out any dates <= refresh_ts
+        for window in prices:
+            fields = [self.ticker, datetime.datetime.strptime(window, '%Y-%m-%d %H:%M:%S')]
+            for item in prices[window]:
+                if item in dtypes:
+                    val = prices[window][item]
+                    itemDataType = dtypes[item]
+                    if val == 'None':
+                        fields.append(None)
+                    elif itemDataType == 'float':
+                        fields.append(float(val))
+                    elif itemDataType == 'int':
+                        fields.append(int(val))
+                    else:
+                        fields.append(window[item])
+            fields.append('AVAPI')
+            fields.append(datetime.datetime.now())
+            print(fields)
+            records_formatted[window] = tuple(fields)
+
+        return {latest_window: records_formatted}
+
+    def parse_price(self, record, dtype_f):
+        if record in dtype_f:
+            itemDataType = dtype_f[record]
+            if itemDataType == 'float':
+                return float(record)
+            elif itemDataType == 'int':
+                return int(record)
+            elif record == 'None':
+                return None
+            else:
+                return record
+
+    def request_prices(self):
         pass
+    def parse_prices_v1(self, response, type, interval):
+        pass
+
+
+
+
 
 #old implementation
 class API:

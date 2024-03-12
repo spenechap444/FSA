@@ -43,7 +43,7 @@ class DB_cnn:
             cursor = conn.cursor()
             for item in records: #can add a multithreaded approach to this
                 cursor.execute(query, records[item])
-                print(item)
+                # print(item)
             cursor.execute('COMMIT;')
         finally:
             if conn:
@@ -51,7 +51,7 @@ class DB_cnn:
                 print('Connection closed')
 
     @DB_retry()
-    def fetch(self, query, params=()):
+    def db_func(self, query, params=()):
         conn = self.open_cnn()
         try:
             cursor=conn.cursor()

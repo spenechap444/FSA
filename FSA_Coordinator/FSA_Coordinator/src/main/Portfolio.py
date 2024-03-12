@@ -15,7 +15,7 @@ class Portfolio:
             company = co.Company_v1(ticker)
             # company.store('BALANCE_SHEET')
             # company.store('OVERVIEW')
-            print(company.fetch_company())
+            company.store('TIME_SERIES_INTRADAY')
             # for item in company.fetch_statement('BALANCE_SHEET', None):
             #     print(item)
 

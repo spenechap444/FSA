@@ -164,11 +164,11 @@
     "stored": {
       "Symbol": "string",
       "windowClose": "date",
-      "open": "float",
-      "high": "float",
-      "low": "float",
-      "close": "float",
-      "volume": "int"
+      "1. open": "float",
+      "2. high": "float",
+      "3. low": "float",
+      "4. close": "float",
+      "5. volume": "int"
     },
     "omitted": {}
   },
@@ -176,11 +176,11 @@
     "stored": {
       "Symbol": "string",
       "windowClose": "timestamp",
-      "open": "float",
-      "high": "float",
-      "low": "float",
-      "close": "float",
-      "volume": "int"
+      "1. open": "float",
+      "2. high": "float",
+      "3. low": "float",
+      "4. close": "float",
+      "5. volume": "int"
     },
     "omitted": {}
   }
